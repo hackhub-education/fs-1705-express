@@ -1,0 +1,7 @@
+extends layout
+block content
+    form(method="POST", action="/student/add")
+        input(name="name", placeholder="Studnet Name", type="text")
+        input(name="age", placeholder="Age", type="text")
+        input(name="school", placeholder="School", type="text")
+        input(type="submit", value="Add")

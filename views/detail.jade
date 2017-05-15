@@ -1,0 +1,13 @@
+extends layout
+block content
+    table
+        tr
+            th Name
+            th Age
+            th School
+        tr
+            td= student.name
+            td= student.age
+            td= student.school
+
+    a(href="/student/") Back

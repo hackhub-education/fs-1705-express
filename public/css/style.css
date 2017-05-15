@@ -1,0 +1,32 @@
+body {
+    padding: 10px;
+}
+
+h1 {
+    font-size: 30px;
+    font-weight: 100;
+}
+
+table tr th {
+    border: 1px solid #F0F0F0;
+    background-color: #ccc;
+    padding: 5px;
+}
+
+table tr td {
+    padding: 5px;
+}
+
+a {
+    background-color: #39a3cc;
+    color: white;
+    text-decoration: none;
+    padding: 10px;
+    margin-top: 10px;
+    display: inline-block;
+}
+
+ul li {
+    display: inline-block;
+    margin-right: 20px;
+}

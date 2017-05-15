@@ -1,0 +1,6 @@
+extends layout
+block content
+    ul
+        each student in students
+            li
+                a(href='/student/' + student.id)= student.name
