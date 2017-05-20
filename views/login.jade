@@ -1,0 +1,5 @@
+extends layout
+block content
+    form(method="POST", action="/chat")
+        input(name="username", placeholder="Username", type="text")
+        input(type="submit", value="Login")
