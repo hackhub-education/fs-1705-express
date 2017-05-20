@@ -8,6 +8,7 @@ var io = require('socket.io')(http)
 var path = require('path')
 var mongoose = require('mongoose')
 var bodyParser = require('body-parser')
+var userArray = []
 
 mongoose.connect('mongodb://localhost/webdxd')
 
@@ -61,12 +62,26 @@ app.get('/chat', function(req, res) {
 })
 
 io.on('connection', function(socket) {
-    console.log('a user joined!')
+    var id = userArray.length
+    var newUser = {
+        id: id,
+        isOnline: true
+    }
+    userArray.push(newUser)
+    io.emit('system message', {
+        message: 'A new user connected.',
+        users: userArray
+    })
     socket.on('send msg', function(obj) {
         io.emit('show msg', obj)
+
     })
     socket.on('disconnect', function () {
-        console.log('user disconnected.')
+        userArray[id].isOnline = false
+        io.emit('system message', {
+            message: 'A new user disconnected.',
+            users: userArray
+        })
     })
 })
 

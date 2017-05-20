@@ -11,11 +11,28 @@
         #messages { list-style-type: none; margin: 0; padding: 0; }
         #messages li { padding: 5px 10px; }
         #messages li:nth-child(odd) { background: #eee; }
+        .left {
+            width: 70%;
+            float: left;
+        }
+        .right {
+            width: 30%;
+            float: right;
+            background-color: #c0c0c0;
+        }
     </style>
 </head>
 <body>
-<ul id="messages"></ul>
+<div class="left">
+    <ul id="messages"></ul>
+</div>
+<div class="right">
+    <ul id="users">
+    </ul>
+</div>
+
 <form action="">
+    <input type="text" id="name">
     <input id="m" autocomplete="off" /><button>Send</button>
 </form>
 
@@ -31,14 +48,29 @@
     $('form').submit(function () {
         socket.emit('send msg', {
             color: color,
+            name: $('#name').val(),
             message: $('#m').val()
         });
         $('#m').val('');
         return false;
     });
 
+    var appendMsg = function (msg, color) {
+        $('#messages').append($('<li>').text(msg).css('color', color));
+    }
+
+    socket.on('system message', function(obj) {
+        appendMsg(obj.message, '#ccc');
+        $('#users').html('')
+        for (var i = 0; i < obj.users.length; i++) {
+            var currentUser =obj.users[i];
+            var color = currentUser.isOnline ? 'green' : '#ccc';
+            $('#users').append($('<li>').text(currentUser.id).css('color', color));
+        }
+    });
+
     socket.on('show msg', function (obj) {
-        $('#messages').append($('<li>').text(obj.message).css('color', obj.color));
+        appendMsg(obj.name + ': ' + obj.message, obj,color);
     });
 
 </script>
