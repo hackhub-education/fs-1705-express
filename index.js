@@ -61,7 +61,6 @@ app.post('/student/add', function(req, res) {
 app.post('/chat', function(req, res) {
 
     Student.findOne({name: req.body.username}).exec(function(err, doc) {
-        console.log(doc)
         if (doc) {
             res.render('chat', {user: doc})
         } else {
@@ -87,47 +86,32 @@ io.on('connection', function(socket) {
         })
     }
 
-    var currentUserId
-    socket.on('send id', function (id) {
-        currentUserId = id
-        console.log(currentUserId);
+    socket.on('send id', function (currentId) {
 
-        Student.find().exec(function(err, doc) {
-            userArray = doc
+        var currentUser = {}
 
-            console.log(userArray)
-
-            for (var i = 0; i < userArray.length; i++) {
-                if (userArray[i].id === currentUserId) {
-                    userArray[i].isOnline = true
-                    var newStudent = new Student(userArray[i])
-
-                    console.log(newStudent)
-                    newStudent.save(function(err, doc) {
-
-                        var currentUser = doc;
-
-                        Student.find().exec(function(err, doc) {
-                            userArray = doc
-                            emitEvent(currentUser.name + ' connected.');
-                        })
-                    })
-                }
-            }
-
-            socket.on('send msg', function(obj) {
-                io.emit('show msg', obj)
+        Student.findOneAndUpdate({_id: currentId}, {$set: {isOnline: true}},  function(err, doc) {
+            currentUser = doc;
+            Student.find().exec(function(err, doc) {
+                userArray = doc
+                emitEvent(currentUser.name + ' connected.');
             })
+        })
 
-            socket.on('disconnect', function () {
+        socket.on('send msg', function(obj) {
+            io.emit('show msg', obj)
+        })
 
-                Student.findById(currentUserId, function (err, doc) {
-                    doc.isOnline = false
-                    doc.save(function(err, doc) {
-                        emitEvent(doc.name + ' disconnected.');
+        socket.on('disconnect', function () {
+            Student.findById(currentId, function (err, doc) {
+                doc.isOnline = false
+                doc.save(function(err, doc) {
+                    Student.find().exec(function(err, doc) {
+                        userArray = doc
+                        emitEvent(currentUser.name + ' disconnected.')
                     })
-
                 })
+
             })
         })
     })
