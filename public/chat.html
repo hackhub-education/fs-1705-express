@@ -26,14 +26,19 @@
 <script>
     var socket = io();
 
+    var color = '#'+Math.floor(Math.random()*16777215).toString(16);
+
     $('form').submit(function () {
-        socket.emit('send msg', $('#m').val());
+        socket.emit('send msg', {
+            color: color,
+            message: $('#m').val()
+        });
         $('#m').val('');
         return false;
     });
 
-    socket.on('show msg', function (msg) {
-        $('#messages').append($('<li>').text(msg));
+    socket.on('show msg', function (obj) {
+        $('#messages').append($('<li>').text(obj.message).css('color', obj.color));
     });
 
 </script>

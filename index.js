@@ -62,8 +62,8 @@ app.get('/chat', function(req, res) {
 
 io.on('connection', function(socket) {
     console.log('a user joined!')
-    socket.on('send msg', function(msg) {
-        io.emit('show msg', msg)
+    socket.on('send msg', function(obj) {
+        io.emit('show msg', obj)
     })
     socket.on('disconnect', function () {
         console.log('user disconnected.')
