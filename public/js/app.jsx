@@ -8,11 +8,11 @@ var Student = React.createClass({
 
     handleClick: function() {
         var ReactThis = this
-        axios.get('http://localhost:3000/api/student/' + this.props.data._id)
+        axios.get('http://localhost:3000/api/student/' + this.state.student._id)
             .then(function(response) {
-                ReactThis.setState({
-                    student: response.data
-                })
+                    ReactThis.setState({
+                        student: response.data
+                    })
                 }
             )
     },
@@ -35,7 +35,7 @@ var Student = React.createClass({
     },
     showUpdate: function() {
         var ReactThis = this
-        axios.get('http://localhost:3000/api/student/' + this.props.data._id)
+        axios.get('http://localhost:3000/api/student/' + this.state.student._id)
             .then(function(response) {
                     ReactThis.setState({
                         student: response.data,
@@ -46,7 +46,7 @@ var Student = React.createClass({
     },
     handleDelete: function() {
         var ReactThis = this
-        axios.delete('http://localhost:3000/api/student/' + this.props.data._id)
+        axios.delete('http://localhost:3000/api/student/' + this.state.student._id)
             .then(function(response) {
                     ReactThis.props.remove(ReactThis.props.data)
                 }
@@ -91,6 +91,7 @@ var Student = React.createClass({
     }
 })
 
+
 var StudentList = React.createClass({
     getInitialState: function() {
       return {
@@ -119,10 +120,11 @@ var StudentList = React.createClass({
                     studentList: newStudentList,
                     newStudent: {}
                 })
+                ReactThis.refs.name.value = ""
+                ReactThis.refs.age.value = ""
+                ReactThis.refs.school.value = ""
             })
-        this.setState({
-            newStudent: {}
-        })
+
     },
     handleChange: function(e) {
         this.state.newStudent[e.target.name] = e.target.value
@@ -137,7 +139,6 @@ var StudentList = React.createClass({
         this.setState({
             studentList: studentList
         })
-
     },
     render: function() {
         console.log(this.state.newStudent)
@@ -151,11 +152,11 @@ var StudentList = React.createClass({
 
                 <form onSubmit={this.handleSubmit}>
 
-                    <input type="text" name="name" placeholder="Name" value={this.state.newStudent.name} onChange={this.handleChange}/>
+                    <input type="text" className="inputStyle" name="name" ref="name" placeholder="Name" value={this.state.newStudent.name} onChange={this.handleChange}/>
 
-                    <input type="text" name="age" placeholder="Age" value={this.state.newStudent.age} onChange={this.handleChange}/>
+                    <input type="text" className="inputStyle" name="age" ref="age" placeholder="Age" value={this.state.newStudent.age} onChange={this.handleChange}/>
 
-                    <input type="text" name="school" placeholder="School" value={this.state.newStudent.school} onChange={this.handleChange}/>
+                    <input type="text" className="inputStyle" name="school" ref="school" placeholder="School" value={this.state.newStudent.school} onChange={this.handleChange}/>
 
                     <button>Submit</button>
 
