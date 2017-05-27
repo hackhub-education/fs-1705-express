@@ -67,6 +67,12 @@ app.post('/api/student/:id', function(req, res) {
     });
 })
 
+app.delete('/api/student/:id', function(req, res) {
+    Student.remove({_id: req.params.id}, function(err, doc) {
+        res.send(doc)
+    })
+})
+
 app.get('/student/add', function(req, res) {
     res.render('add', {})
 })

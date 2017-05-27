@@ -44,10 +44,21 @@ var Student = React.createClass({
                 }
             )
     },
+    handleDelete: function() {
+        var ReactThis = this
+        axios.delete('http://localhost:3000/api/student/' + this.props.data._id)
+            .then(function(response) {
+                    ReactThis.props.remove(ReactThis.props.data)
+                }
+            )
+    },
     render: function() {
 
         var updateForm = (
-            <button onClick={this.showUpdate}>update</button>
+            <div>
+                <button onClick={this.showUpdate}>update</button>
+                <button onClick={this.handleDelete}>delete</button>
+            </div>
         )
 
         if (this.state.showUpdate) {
@@ -96,6 +107,7 @@ var StudentList = React.createClass({
                     })
             })
     },
+
     handleSubmit: function(e) {
         e.preventDefault()
         var ReactThis = this
@@ -104,32 +116,46 @@ var StudentList = React.createClass({
                 var newStudentList = ReactThis.state.studentList
                 newStudentList.push(response.data)
                 ReactThis.setState({
-                    studentList: newStudentList
+                    studentList: newStudentList,
+                    newStudent: {}
                 })
             })
-    },
-    handleChange: function(e) {
-        var studentObj = this.state.newStudent
-        studentObj[e.target.name] = e.target.value
         this.setState({
-            newStudent: studentObj
+            newStudent: {}
         })
     },
+    handleChange: function(e) {
+        this.state.newStudent[e.target.name] = e.target.value
+    },
+    removeStudent: function(student) {
+        // remove student from student list
+        var studentList = this.state.studentList
+        var deleteIndex = studentList.indexOf(student)
+        if (deleteIndex > -1) {
+            studentList.splice(deleteIndex, 1);
+        }
+        this.setState({
+            studentList: studentList
+        })
+
+    },
     render: function() {
+        console.log(this.state.newStudent)
+        var ReactThis = this
         return (<div>
                 {this.state.studentList.map(
                     function(student) {
-                        return <Student data={student} key={student._id}/>
+                        return <Student data={student} remove={ReactThis.removeStudent} key={student._id}/>
                     }
                 )}
 
                 <form onSubmit={this.handleSubmit}>
 
-                    <input type="text" name="name" placeholder="Name" onChange={this.handleChange}/>
+                    <input type="text" name="name" placeholder="Name" value={this.state.newStudent.name} onChange={this.handleChange}/>
 
-                    <input type="text" name="age" placeholder="Age" onChange={this.handleChange}/>
+                    <input type="text" name="age" placeholder="Age" value={this.state.newStudent.age} onChange={this.handleChange}/>
 
-                    <input type="text" name="school" placeholder="School" onChange={this.handleChange}/>
+                    <input type="text" name="school" placeholder="School" value={this.state.newStudent.school} onChange={this.handleChange}/>
 
                     <button>Submit</button>
 
