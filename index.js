@@ -47,10 +47,24 @@ app.get('/api/student', function(req,res) {
     })
 })
 
+app.post('/api/student', function(req,res) {
+    // console.log(req.body)
+    var newStudent = new Student(req.body)
+    newStudent.save(function(err, doc) {
+        res.send({_id: doc._id, name: doc.name})
+    })
+})
+
 app.get('/api/student/:id', function(req, res) {
     Student.findById(req.params.id, function(err, doc) {
         res.send(doc)
     })
+})
+
+app.post('/api/student/:id', function(req, res) {
+    Student.update(req.body._id, req.body, function(err, doc) {
+        res.send(doc)
+    });
 })
 
 app.get('/student/add', function(req, res) {

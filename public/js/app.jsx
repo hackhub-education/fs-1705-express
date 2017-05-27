@@ -1,7 +1,8 @@
 var Student = React.createClass({
     getInitialState: function() {
         return {
-            student: this.props.data
+            student: this.props.data,
+            showUpdate: false
         }
     },
 
@@ -15,11 +16,63 @@ var Student = React.createClass({
                 }
             )
     },
+    handleChange: function(e) {
+        var studentObj = this.state.student
+        studentObj[e.target.name] = e.target.value
+        this.setState({
+            student: studentObj
+        })
+    },
+    handleSubmit: function(e) {
+        e.preventDefault()
+        var ReactThis = this
+        axios.post('http://localhost:3000/api/student/' + this.state.student._id, this.state.student)
+            .then(function() {
+                ReactThis.setState({
+                    showUpdate: false
+                })
+            })
+    },
+    showUpdate: function() {
+        var ReactThis = this
+        axios.get('http://localhost:3000/api/student/' + this.props.data._id)
+            .then(function(response) {
+                    ReactThis.setState({
+                        student: response.data,
+                        showUpdate: true
+                    })
+                }
+            )
+    },
     render: function() {
+
+        var updateForm = (
+            <button onClick={this.showUpdate}>update</button>
+        )
+
+        if (this.state.showUpdate) {
+            updateForm = (
+
+                <form onSubmit={this.handleSubmit}>
+
+                    <input type="text" name="name" placeholder="Name" value={this.state.student.name} onChange={this.handleChange}/>
+
+                    <input type="text" name="age" placeholder="Age" value={this.state.student.age} onChange={this.handleChange}/>
+
+                    <input type="text" name="school" placeholder="School" value={this.state.student.school} onChange={this.handleChange}/>
+
+                    <button>Submit</button>
+
+                </form>
+
+            )
+        }
+
         return (
 
             <div>
-                <h1 onClick={this.handleClick}>{this.state.student.name} {this.state.student.age}</h1>
+                <h1 onClick={this.handleClick}>{this.state.student.name}</h1>
+                {updateForm}
             </div>
 
 
@@ -45,11 +98,15 @@ var StudentList = React.createClass({
     },
     handleSubmit: function(e) {
         e.preventDefault()
+        var ReactThis = this
         axios.post('http://localhost:3000/api/student', this.state.newStudent)
             .then(function(response) {
-                console.log(response)
+                var newStudentList = ReactThis.state.studentList
+                newStudentList.push(response.data)
+                ReactThis.setState({
+                    studentList: newStudentList
+                })
             })
-        console.log(this.state.newStudent)
     },
     handleChange: function(e) {
         var studentObj = this.state.newStudent
