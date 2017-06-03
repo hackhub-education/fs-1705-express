@@ -8,7 +8,7 @@ var Student = React.createClass({
 
     handleClick: function() {
         var ReactThis = this
-        axios.get('http://localhost:3000/api/student/' + this.state.student._id)
+        axios.get('/api/student/' + this.state.student._id)
             .then(function(response) {
                     ReactThis.setState({
                         student: response.data
@@ -26,7 +26,7 @@ var Student = React.createClass({
     handleSubmit: function(e) {
         e.preventDefault()
         var ReactThis = this
-        axios.post('http://localhost:3000/api/student/' + this.state.student._id, this.state.student)
+        axios.post('/api/student/' + this.state.student._id, this.state.student)
             .then(function() {
                 ReactThis.setState({
                     showUpdate: false
@@ -35,7 +35,7 @@ var Student = React.createClass({
     },
     showUpdate: function() {
         var ReactThis = this
-        axios.get('http://localhost:3000/api/student/' + this.state.student._id)
+        axios.get('/api/student/' + this.state.student._id)
             .then(function(response) {
                     ReactThis.setState({
                         student: response.data,
@@ -46,7 +46,7 @@ var Student = React.createClass({
     },
     handleDelete: function() {
         var ReactThis = this
-        axios.delete('http://localhost:3000/api/student/' + this.state.student._id)
+        axios.delete('/api/student/' + this.state.student._id)
             .then(function(response) {
                     ReactThis.props.remove(ReactThis.props.data)
                 }
@@ -101,7 +101,7 @@ var StudentList = React.createClass({
     },
     componentWillMount: function() {
         var ReactThis = this
-        axios.get('http://localhost:3000/api/student')
+        axios.get('/api/student')
             .then(function(response) {
                 ReactThis.setState({
                     studentList: response.data
@@ -112,7 +112,7 @@ var StudentList = React.createClass({
     handleSubmit: function(e) {
         e.preventDefault()
         var ReactThis = this
-        axios.post('http://localhost:3000/api/student', this.state.newStudent)
+        axios.post('/api/student', this.state.newStudent)
             .then(function(response) {
                 var newStudentList = ReactThis.state.studentList
                 newStudentList.push(response.data)
